@@ -14,8 +14,8 @@ const app = express();
 
 // CORS configuration
 const allowedOrigins = [
-  'http://localhost:3000',           // Local dev
-  'https://preciousacademy.vercel.app' // Production frontend
+  'http://localhost:3000',
+  'https://preciousacademy.vercel.app'
 ];
 app.use(cors({
   origin: (origin, callback) => {
@@ -28,13 +28,31 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Routes
+// Test root route
+app.get('/', (req, res) => {
+  res.send('Backend is running');
+});
+
+// Log route loading
+console.log('Loading routes...');
 app.use('/api/students', studentRoutes);
-app.use('/api/students', testResultRoutes); // Routes like /api/students/:id/test-results
+console.log('Student routes loaded');
+app.use('/api/students', testResultRoutes);
+console.log('Test result routes loaded');
 app.use('/api/students', feeRoutes);
+console.log('Fee routes loaded');
 app.use('/api/students', noteRoutes);
+console.log('Note routes loaded');
 app.use('/api/reports', reportsRoutes);
-app.use('/api/test-results', testResultRoutes); // Root route for test results
+console.log('Report routes loaded');
+app.use('/api/test-results', testResultRoutes);
+console.log('Test result root routes loaded');
+
+// Fallback for unmatched routes
+app.use((req, res) => {
+  console.log(`Unmatched route: ${req.method} ${req.url}`);
+  res.status(404).json({ message: 'Route not found' });
+});
 
 // MongoDB connection
 mongoose
