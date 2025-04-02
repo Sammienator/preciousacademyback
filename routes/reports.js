@@ -4,18 +4,16 @@ const Student = require('../models/Student');
 const TestResult = require('../models/TestResult');
 const Fee = require('../models/Fee');
 
-// Log to confirm the route file is loaded
-console.log('Reports route loaded');
+// Log to confirm file loading
+console.log('Reports routes file loaded');
 
 router.get('/grade-summary', async (req, res) => {
   const { type, term } = req.query;
-
-  // Log incoming request for debugging
   console.log(`Received request for /grade-summary with type=${type}, term=${term}`);
-
   try {
     const grades = await Student.distinct('grade');
     if (!grades || grades.length === 0) {
+      console.log('No grades found in database');
       return res.status(404).json({ message: 'No grades found in the database' });
     }
 
@@ -58,13 +56,14 @@ router.get('/grade-summary', async (req, res) => {
 
           return { grade, feeStatus };
         }
-        // Return null for invalid type to filter out later
+        console.log(`Invalid type: ${type} for grade ${grade}`);
         return null;
       })
     );
 
     const filteredSummary = summary.filter((item) => item !== null);
     if (filteredSummary.length === 0) {
+      console.log('No valid summary data due to invalid type');
       return res.status(400).json({ message: 'Invalid or unsupported type parameter' });
     }
 
@@ -75,7 +74,7 @@ router.get('/grade-summary', async (req, res) => {
   }
 });
 
-// Add a test route for debugging
+// Test route
 router.get('/test', (req, res) => {
   res.json({ message: 'Reports route is working' });
 });

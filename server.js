@@ -2,11 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const studentRoutes = require('./routes/student');
-const testResultRoutes = require('./routes/testResults');
-const feeRoutes = require('./routes/fees');
-const noteRoutes = require('./routes/notes');
-const reportsRoutes = require('./routes/reports');
 
 dotenv.config();
 
@@ -33,20 +28,48 @@ app.get('/', (req, res) => {
   res.send('Backend is running');
 });
 
-// Log route loading
+// Load and log routes
 console.log('Loading routes...');
-app.use('/api/students', studentRoutes);
-console.log('Student routes loaded');
-app.use('/api/students', testResultRoutes);
-console.log('Test result routes loaded');
-app.use('/api/students', feeRoutes);
-console.log('Fee routes loaded');
-app.use('/api/students', noteRoutes);
-console.log('Note routes loaded');
-app.use('/api/reports', reportsRoutes);
-console.log('Report routes loaded');
-app.use('/api/test-results', testResultRoutes);
-console.log('Test result root routes loaded');
+try {
+  const studentRoutes = require('./routes/student');
+  app.use('/api/students', studentRoutes);
+  console.log('Student routes mounted');
+} catch (err) {
+  console.error('Failed to load student routes:', err);
+}
+
+try {
+  const testResultRoutes = require('./routes/testResults');
+  app.use('/api/students', testResultRoutes); // Nested under /api/students
+  app.use('/api/test-results', testResultRoutes); // Root level
+  console.log('Test result routes mounted');
+} catch (err) {
+  console.error('Failed to load test result routes:', err);
+}
+
+try {
+  const feeRoutes = require('./routes/fees');
+  app.use('/api/students', feeRoutes);
+  console.log('Fee routes mounted');
+} catch (err) {
+  console.error('Failed to load fee routes:', err);
+}
+
+try {
+  const noteRoutes = require('./routes/notes');
+  app.use('/api/students', noteRoutes);
+  console.log('Note routes mounted');
+} catch (err) {
+  console.error('Failed to load note routes:', err);
+}
+
+try {
+  const reportsRoutes = require('./routes/reports');
+  app.use('/api/reports', reportsRoutes);
+  console.log('Report routes mounted');
+} catch (err) {
+  console.error('Failed to load report routes:', err);
+}
 
 // Fallback for unmatched routes
 app.use((req, res) => {
