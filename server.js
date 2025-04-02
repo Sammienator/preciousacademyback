@@ -7,6 +7,16 @@ dotenv.config();
 
 const app = express();
 
+// Normalize URLs to handle double slashes
+app.use((req, res, next) => {
+  const originalUrl = req.url;
+  req.url = req.url.replace(/\/+/g, '/'); // Collapse multiple slashes into one
+  if (originalUrl !== req.url) {
+    console.log(`Normalized URL: ${originalUrl} -> ${req.url}`);
+  }
+  next();
+});
+
 // CORS configuration
 const allowedOrigins = [
   'http://localhost:3000',
@@ -70,6 +80,9 @@ try {
 } catch (err) {
   console.error('Failed to load report routes:', err);
 }
+
+// Handle favicon.ico requests
+app.get('/favicon.ico', (req, res) => res.status(204).end());
 
 // Fallback for unmatched routes
 app.use((req, res) => {
