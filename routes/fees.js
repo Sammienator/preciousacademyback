@@ -2,11 +2,10 @@ const express = require('express');
 const router = express.Router();
 const Fee = require('../models/Fee');
 
-// Log to confirm file loading
 console.log('Fees routes file loaded');
 
-// Get fees for a student
-router.get('/:id/fees', async (req, res) => {
+// Get fees for a student (now /api/students/fees/:id)
+router.get('/:id', async (req, res) => {
   console.log(`Fetching fees for student ID: ${req.params.id}`);
   try {
     const fees = await Fee.find({ studentId: req.params.id });
@@ -17,8 +16,8 @@ router.get('/:id/fees', async (req, res) => {
   }
 });
 
-// Add or update fee
-router.post('/:id/fees', async (req, res) => {
+// Add or update fee (now /api/students/fees/:id)
+router.post('/:id', async (req, res) => {
   const { term, status } = req.body;
   console.log(`Adding/updating fee for student ID: ${req.params.id}, term: ${term}, status: ${status}`);
   try {

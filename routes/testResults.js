@@ -3,11 +3,10 @@ const router = express.Router();
 const TestResult = require('../models/TestResult');
 const Student = require('../models/Student');
 
-// Log to confirm file loading
 console.log('TestResults routes file loaded');
 
-// Get test results for a specific student
-router.get('/:id/test-results', async (req, res) => {
+// Get test results for a specific student (now /api/students/test-results/:id)
+router.get('/:id', async (req, res) => {
   console.log(`Fetching test results for student ID: ${req.params.id}`);
   try {
     const testResults = await TestResult.find({ studentId: req.params.id });
@@ -18,7 +17,7 @@ router.get('/:id/test-results', async (req, res) => {
   }
 });
 
-// Get all test results with student details
+// Get all test results with student details (now /api/students/test-results or /api/test-results)
 router.get('/', async (req, res) => {
   const { grade, term } = req.query;
   console.log(`Fetching all test results with grade: ${grade || 'none'}, term: ${term || 'none'}`);
@@ -39,8 +38,8 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Add or update test result
-router.post('/:id/test-results', async (req, res) => {
+// Add or update test result (now /api/students/test-results/:id)
+router.post('/:id', async (req, res) => {
   const { term, subjects } = req.body;
   console.log(`Adding/updating test result for student ID: ${req.params.id}, term: ${term}`);
   try {

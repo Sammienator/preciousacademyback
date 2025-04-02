@@ -40,8 +40,8 @@ try {
 
 try {
   const testResultRoutes = require('./routes/testResults');
-  app.use('/api/students', testResultRoutes); // Nested under /api/students
-  app.use('/api/test-results', testResultRoutes); // Root level
+  app.use('/api/students/test-results', testResultRoutes); // Nested under /api/students/test-results
+  app.use('/api/test-results', testResultRoutes); // Root level for backwards compatibility
   console.log('Test result routes mounted');
 } catch (err) {
   console.error('Failed to load test result routes:', err);
@@ -49,7 +49,7 @@ try {
 
 try {
   const feeRoutes = require('./routes/fees');
-  app.use('/api/students', feeRoutes);
+  app.use('/api/students/fees', feeRoutes); // Nested under /api/students/fees
   console.log('Fee routes mounted');
 } catch (err) {
   console.error('Failed to load fee routes:', err);
@@ -57,7 +57,7 @@ try {
 
 try {
   const noteRoutes = require('./routes/notes');
-  app.use('/api/students', noteRoutes);
+  app.use('/api/students/notes', noteRoutes); // Nested under /api/students/notes
   console.log('Note routes mounted');
 } catch (err) {
   console.error('Failed to load note routes:', err);

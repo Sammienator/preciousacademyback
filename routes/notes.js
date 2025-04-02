@@ -2,11 +2,10 @@ const express = require('express');
 const router = express.Router();
 const Note = require('../models/Note');
 
-// Log to confirm file loading
 console.log('Notes routes file loaded');
 
-// Get notes for a student
-router.get('/:id/notes', async (req, res) => {
+// Get notes for a student (now /api/students/notes/:id)
+router.get('/:id', async (req, res) => {
   console.log(`Fetching notes for student ID: ${req.params.id}`);
   try {
     const notes = await Note.find({ studentId: req.params.id });
@@ -17,8 +16,8 @@ router.get('/:id/notes', async (req, res) => {
   }
 });
 
-// Add a note
-router.post('/:id/notes', async (req, res) => {
+// Add a note (now /api/students/notes/:id)
+router.post('/:id', async (req, res) => {
   const { content } = req.body;
   console.log(`Adding note for student ID: ${req.params.id}, content: ${content}`);
   try {
