@@ -20,7 +20,7 @@ router.post('/', async (req, res) => {
       parentContact,
       dateOfBirth,
       address,
-      enrollmentDate: new Date(), // Added to match your schema
+      enrollmentDate: new Date(),
     });
     const savedStudent = await student.save();
     res.status(201).json({ message: 'Student added successfully', student: savedStudent });

@@ -47,20 +47,11 @@ router.get('/grade-summary', async (req, res) => {
 
           return { grade, feeStatus };
         }
-        // If type is invalid, return null (this might be the issue)
-        return null; // Add this to catch unexpected cases
+        return null;
       })
     );
 
-    // Log the summary to debug
-    console.log('Summary before filtering:', summary);
-
-    // Filter out null entries
     const filteredSummary = summary.filter((item) => item !== null);
-
-    // Log the filtered summary
-    console.log('Filtered summary:', filteredSummary);
-
     res.json({ message: 'Summary fetched successfully', summary: filteredSummary });
   } catch (err) {
     res.status(500).json({ message: 'Failed to fetch summary', error: err.message });

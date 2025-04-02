@@ -12,10 +12,10 @@ dotenv.config();
 
 const app = express();
 
-// CORS configuration for Vercel frontend and local development
+// CORS configuration
 const allowedOrigins = [
   'http://localhost:3000',           // Local dev
-  'https://preciousacademy.vercel.app' // Vercel frontend
+  'https://preciousacademy.vercel.app' // Production frontend
 ];
 app.use(cors({
   origin: (origin, callback) => {
@@ -31,8 +31,8 @@ app.use(express.json());
 // Routes
 app.use('/api/students', studentRoutes);
 app.use('/api/students', testResultRoutes); // Routes like /api/students/:id/test-results
-app.use('/api/students', feeRoutes);        // Routes like /api/students/:id/fees
-app.use('/api/students', noteRoutes);       // Routes like /api/students/:id/notes
+app.use('/api/students', feeRoutes);
+app.use('/api/students', noteRoutes);
 app.use('/api/reports', reportsRoutes);
 app.use('/api/test-results', testResultRoutes); // Root route for test results
 
@@ -42,6 +42,5 @@ mongoose
   .then(() => console.log('MongoDB connected to Atlas'))
   .catch((err) => console.error('MongoDB connection error:', err));
 
-// Railway sets PORT automatically
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -13,23 +13,17 @@ router.get('/:id/test-results', async (req, res) => {
   }
 });
 
-// Get all test results with student details (Updated to filter by term)
+// Get all test results with student details
 router.get('/', async (req, res) => {
-  const { grade, term } = req.query; // Added term to query params
+  const { grade, term } = req.query;
   try {
     let query = {};
-
-    // Filter by grade if provided
     if (grade) {
       const students = await Student.find({ grade: parseInt(grade) }).select('_id');
       const studentIds = students.map((s) => s._id);
       query.studentId = { $in: studentIds };
     }
-
-    // Filter by term if provided
-    if (term) {
-      query.term = term; // Matches "Term 1", "Term 2", or "Term 3" from frontend
-    }
+    if (term) query.term = term;
 
     const testResults = await TestResult.find(query).populate('studentId', 'name grade');
     res.json({ message: 'All test results fetched successfully', testResults });
@@ -53,11 +47,7 @@ router.post('/:id/test-results', async (req, res) => {
       await existingResult.save();
       res.json({ message: 'Test result updated successfully', testResult: existingResult });
     } else {
-      const testResult = new TestResult({
-        studentId: req.params.id,
-        term,
-        subjects,
-      });
+      const testResult = new TestResult({ studentId: req.params.id, term, subjects });
       const savedResult = await testResult.save();
       res.status(201).json({ message: 'Test result added successfully', testResult: savedResult });
     }
