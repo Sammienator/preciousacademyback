@@ -2,10 +2,16 @@ const express = require('express');
 const router = express.Router();
 const Student = require('../models/Student');
 
-// Log to confirm file loading
 console.log('Student routes file loaded');
 
-// Add a new student (POST)
+// Middleware to check admin role
+const isAdmin = (req, res, next) => {
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ message: 'Admin access required' });
+  }
+  next();
+};
+
 router.post('/', async (req, res) => {
   const { name, schoolCode, age, grade, parentName, parentContact, dateOfBirth, address } = req.body;
   console.log(`Adding student: ${name}, schoolCode: ${schoolCode}`);
@@ -15,7 +21,6 @@ router.post('/', async (req, res) => {
       console.log(`School code ${schoolCode} already in use`);
       return res.status(400).json({ message: 'School code already in use' });
     }
-
     const student = new Student({
       name,
       schoolCode,
@@ -35,7 +40,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Get all students or by grade (GET)
 router.get('/', async (req, res) => {
   const { grade } = req.query;
   console.log(`Fetching students with grade filter: ${grade || 'none'}`);
@@ -49,7 +53,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get student by ID (GET)
 router.get('/:id', async (req, res) => {
   console.log(`Fetching student with ID: ${req.params.id}`);
   try {
@@ -65,8 +68,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Delete student (DELETE)
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', isAdmin, async (req, res) => {
   console.log(`Deleting student with ID: ${req.params.id}`);
   try {
     const student = await Student.findByIdAndDelete(req.params.id);
@@ -81,7 +83,6 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-// Test route
 router.get('/test', (req, res) => {
   res.json({ message: 'Student route is working' });
 });
