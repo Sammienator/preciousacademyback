@@ -119,6 +119,18 @@ try {
   console.error('Failed to load report routes:', err);
 }
 
+try {
+  const authRoutes = require('./routes/auth');
+  app.use('/api/auth', authRoutes);
+  console.log('Auth routes mounted successfully');
+  // Add this to list all registered routes
+  console.log('Registered routes:', app._router.stack
+    .filter(r => r.route)
+    .map(r => `${r.route.path} (${r.route.stack[0].method})`));
+} catch (err) {
+  console.error('Failed to load auth routes:', err);
+}
+
 app.get('/favicon.ico', (req, res) => res.status(204).end());
 
 // Log unmatched routes for debugging
